@@ -1,4 +1,4 @@
-<index.html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -35,7 +35,7 @@
       justify-content: space-between;
     }
 
-    /* BARRA SUPERIOR PERMANENTE */
+    /* BARRA SUPERIOR PERMANENTE EN TODAS LAS PANTALLAS */
     .permanent-top-header {
       background-color: var(--mag-dark);
       color: #ffffff;
@@ -152,7 +152,7 @@
       box-shadow: 0 6px 16px rgba(190, 24, 93, 0.4);
     }
 
-    /* BOTONES DE INTEROPERABILIDAD DINÁMICOS CON MOVIMIENTO */
+    /* BOTONES DE INTEROPERABILIDAD DINÁMICOS */
     .btn-interop {
       display: inline-flex;
       align-items: center;
@@ -166,8 +166,6 @@
       color: #ffffff;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      position: relative;
-      overflow: hidden;
     }
     .btn-interop:hover {
       transform: translateY(-2px) scale(1.03);
@@ -217,7 +215,7 @@
       padding: 10px 14px;
     }
 
-    /* VISOR PDF SIMULADO */
+    /* VISOR PDF CON ZOOM */
     .pdf-viewer-bar {
       background: #334155;
       color: white;
@@ -237,6 +235,8 @@
       font-size: 13px;
       line-height: 1.6;
       border: 1px solid #cbd5e1;
+      transform-origin: top center;
+      transition: transform 0.2s ease;
     }
 
     /* CHATBOT IURISNIANO FLOTANTE */
@@ -246,38 +246,38 @@
       right: 20px;
       background: linear-gradient(135deg, #831034, #be185d);
       color: white;
-      width: 56px;
-      height: 56px;
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 20px rgba(190, 24, 93, 0.4);
+      box-shadow: 0 6px 20px rgba(190, 24, 93, 0.45);
       cursor: pointer;
       z-index: 3000;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     #chatbot-bubble-btn:hover {
-      transform: scale(1.08) rotate(5deg);
+      transform: scale(1.1) rotate(6deg);
     }
     #chatbot-window {
       position: fixed;
-      bottom: 85px;
+      bottom: 88px;
       right: 20px;
-      width: 330px;
+      width: 340px;
       max-width: 90vw;
-      height: 420px;
+      height: 460px;
       background: #ffffff;
-      border-radius: 16px;
+      border-radius: 18px;
       border: 1px solid var(--mag-border);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.3);
       display: none;
       flex-direction: column;
       z-index: 3000;
       overflow: hidden;
     }
 
-    /* MODAL */
+    /* MODALES FLOTANTES */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -348,6 +348,18 @@
     <button onclick="triggerCaptchaWorkflow()" class="nav-item-btn" style="margin-left:auto; background:#be185d; color:white; font-weight:bold;" id="nav-btn-search">🔍 Búsqueda de Expediente</button>
   </nav>
 
+  <!-- PANEL DE INFORMACIÓN INSTITUCIONAL DE LA BARRA (MISIÓN, VISIÓN, ETC.) -->
+  <div id="info-modal-view" class="modal-overlay">
+    <div class="modal-card" style="max-width: 520px; padding: 22px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--mag-border); padding-bottom: 8px; margin-bottom: 14px;">
+        <h3 id="info-modal-title" style="color: var(--mag-primary); font-size: 15px; font-weight: 800;">Información Institucional</h3>
+        <button onclick="closeModal('info-modal-view')" style="background: none; border: none; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <div id="info-modal-body" style="font-size: 13px; line-height: 1.6; color: var(--text-main); margin-bottom: 16px;"></div>
+      <button onclick="closeModal('info-modal-view')" class="btn-main" style="padding: 8px 14px; font-size: 12px;">Entendido</button>
+    </div>
+  </div>
+
   <!-- CONTENEDOR PRINCIPAL DE PANTALLAS -->
   <div style="flex-grow: 1; display: flex; flex-direction: column;">
 
@@ -397,16 +409,17 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- PANTALLA 1: PANTALLA DE CARGA 1            -->
+    <!-- PANTALLA 1: PANTALLA DE CARGA 1 DINÁMICA   -->
     <!-- ========================================== -->
     <div id="pantalla-1" class="screen-stage center-content">
       <div style="max-width: 340px; width: 100%; text-align: center;">
-        <svg style="width: 44px; height: 44px; color: #831034; margin-bottom: 12px; animation: spin 2s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg style="width: 44px; height: 44px; color: #831034; margin-bottom: 12px; animation: spin 1.5s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
         <h3 id="p1-title" style="font-size: 15px; font-weight: 700; color: #4a0418;">Iniciando Portal Institucional</h3>
-        <p id="p1-desc" style="font-size: 12px; color: #64748b; margin-top: 4px;">Cargando módulos de Gobierno Digital...</p>
-        <div style="background: #fce7f3; height: 7px; border-radius: 8px; overflow: hidden; margin-top: 14px;">
+        <p id="p1-desc" style="font-size: 12px; color: #64748b; margin-top: 4px;">Estableciendo canal cifrado con el SIJ...</p>
+        <div style="font-weight: 800; font-size: 12px; color: var(--mag-vivid); margin-top: 10px;" id="p1-pct">0%</div>
+        <div style="background: #fce7f3; height: 8px; border-radius: 8px; overflow: hidden; margin-top: 6px;">
           <div id="p1-loader-fill" style="height: 100%; background: linear-gradient(90deg, #831034, #be185d); width: 0%; transition: width 0.1s linear;"></div>
         </div>
       </div>
@@ -448,23 +461,36 @@
             <button onclick="cancelSearchWorkflow()" style="background: none; border: none; color: #fbcfe8; cursor: pointer; font-size: 16px;">✕</button>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-bottom: 12px;">
-            <div>
-              <label style="font-size: 11px; font-weight: bold; color: #64748b;">Correlativo</label>
-              <input type="text" value="00174" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; font-weight: bold;">
+          <!-- Pestañas Número / Partes -->
+          <div style="display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid #fce7f3; padding-bottom: 8px;">
+            <button id="tab-code-btn" onclick="toggleSearchTab('code')" style="background: #831034; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer;">Por Número de Expediente</button>
+            <button id="tab-party-btn" onclick="toggleSearchTab('party')" style="background: #e2e8f0; color: #334155; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer;">Por Partes Procesales</button>
+          </div>
+
+          <div id="search-by-code-fields">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-bottom: 12px;">
+              <div>
+                <label style="font-size: 11px; font-weight: bold; color: #64748b;">Correlativo</label>
+                <input type="text" value="00174" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; font-weight: bold;">
+              </div>
+              <div>
+                <label style="font-size: 11px; font-weight: bold; color: #64748b;">Año</label>
+                <input type="text" value="2019" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; font-weight: bold;">
+              </div>
+              <div>
+                <label style="font-size: 11px; font-weight: bold; color: #64748b;">Cuaderno</label>
+                <input type="text" value="0" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; font-weight: bold;">
+              </div>
+              <div>
+                <label style="font-size: 11px; font-weight: bold; color: #64748b;">Distrito</label>
+                <input type="text" value="2111" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; font-weight: bold;">
+              </div>
             </div>
-            <div>
-              <label style="font-size: 11px; font-weight: bold; color: #64748b;">Año</label>
-              <input type="text" value="2019" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; font-weight: bold;">
-            </div>
-            <div>
-              <label style="font-size: 11px; font-weight: bold; color: #64748b;">Cuaderno</label>
-              <input type="text" value="0" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; font-weight: bold;">
-            </div>
-            <div>
-              <label style="font-size: 11px; font-weight: bold; color: #64748b;">Distrito</label>
-              <input type="text" value="2111" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; font-weight: bold;">
-            </div>
+          </div>
+
+          <div id="search-by-party-fields" style="display: none; margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: bold; color: #64748b;">Nombre / Razón Social:</label>
+            <input type="text" value="Andrés Leonidas Supo Quispe" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; margin-top: 4px; font-weight: bold;">
           </div>
 
           <div style="background: #fdf2f8; border: 1px solid #fbcfe8; padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom: 16px;">
@@ -480,16 +506,17 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- PANTALLA 4: PANTALLA DE CARGA 2            -->
+    <!-- PANTALLA 4: PANTALLA DE CARGA 2 DINÁMICA   -->
     <!-- ========================================== -->
     <div id="pantalla-4" class="screen-stage center-content">
       <div style="max-width: 340px; width: 100%; text-align: center;">
-        <svg style="width: 44px; height: 44px; color: #be185d; margin-bottom: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg style="width: 44px; height: 44px; color: #be185d; margin-bottom: 12px; animation: bounce 1s infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/>
         </svg>
         <h3 id="p4-title" style="font-size: 15px; font-weight: 700; color: #4a0418;">Indexando Cuaderno Laboral Digital</h3>
-        <p id="p4-desc" style="font-size: 12px; color: #64748b; margin-top: 4px;">Recuperando resoluciones y línea de tiempo...</p>
-        <div style="background: #fce7f3; height: 7px; border-radius: 8px; overflow: hidden; margin-top: 14px;">
+        <p id="p4-desc" style="font-size: 12px; color: #64748b; margin-top: 4px;">Recuperando foliatura, resoluciones y línea de tiempo...</p>
+        <div style="font-weight: 800; font-size: 12px; color: var(--mag-primary); margin-top: 10px;" id="p4-pct">0%</div>
+        <div style="background: #fce7f3; height: 8px; border-radius: 8px; overflow: hidden; margin-top: 6px;">
           <div id="p4-loader-fill" style="height: 100%; background: linear-gradient(90deg, #831034, #be185d); width: 0%; transition: width 0.1s linear;"></div>
         </div>
       </div>
@@ -552,15 +579,15 @@
                 <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 <span>RENIEC (Identidad Protegida)</span>
               </button>
-              <button onclick="openStandardInterop('MIGRACIONES', 'Andrés Leonidas Supo Quispe', 'DNI: 02167445', 'Sin impedimento de salida del país. Pasaporte ordinario válido.')" class="btn-interop btn-migra">
+              <button onclick="openGenericInterop('MIGRACIONES', 'Andrés Leonidas Supo Quispe', 'DNI: 02167445', 'Sin impedimento de salida del país. Pasaporte ordinario válido.')" class="btn-interop btn-migra">
                 <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/></svg>
                 <span>MIGRACIONES</span>
               </button>
-              <button onclick="openStandardInterop('PNP', 'Andrés Leonidas Supo Quispe', 'DNI: 02167445', 'ESINPOL: NO REGISTRA ORDEN DE CAPTURA NI REQUISITORIA VIGENTE.')" class="btn-interop btn-pnp">
+              <button onclick="openGenericInterop('PNP', 'Andrés Leonidas Supo Quispe', 'DNI: 02167445', 'ESINPOL: NO REGISTRA ORDEN DE CAPTURA NI REQUISITORIA VIGENTE.')" class="btn-interop btn-pnp">
                 <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 <span>PNP (Requisitorias)</span>
               </button>
-              <button onclick="openStandardInterop('INPE', 'Andrés Leonidas Supo Quispe', 'DNI: 02167445', 'REGISTRO PENAL: NO REGISTRA ANTECEDENTES PENITENCIARIOS.')" class="btn-interop btn-inpe">
+              <button onclick="openGenericInterop('INPE', 'Andrés Leonidas Supo Quispe', 'DNI: 02167445', 'REGISTRO PENAL: NO REGISTRA ANTECEDENTES PENITENCIARIOS.')" class="btn-interop btn-inpe">
                 <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
                 <span>INPE (Penales)</span>
               </button>
@@ -622,7 +649,6 @@
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
           </svg>
           <span style="font-size: 9px; color: #475569; font-weight: bold; margin-top: 4px;">FOTO RENIEC</span>
-          <!-- Franja de seguridad -->
           <div style="position: absolute; bottom: 0; width: 100%; background: rgba(2, 132, 199, 0.85); color: white; font-size: 8px; text-align: center; padding: 1px;">VERIFICADO</div>
         </div>
 
@@ -645,6 +671,22 @@
   </div>
 
   <!-- ========================================== -->
+  <!-- MODAL: INTEROPERABILIDAD GENÉRICA          -->
+  <!-- ========================================== -->
+  <div id="generic-interop-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 480px; padding: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--mag-border); padding-bottom: 8px; margin-bottom: 12px;">
+        <h4 id="gen-interop-title" style="color: var(--mag-primary); font-size: 14px; font-weight: bold;">Consulta Interoperabilidad</h4>
+        <button onclick="closeModal('generic-interop-modal')" style="background: none; border: none; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <div style="font-size: 12px; margin-bottom: 6px;">Titular: <strong id="gen-interop-name"></strong></div>
+      <div style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Doc: <strong id="gen-interop-doc"></strong></div>
+      <div id="gen-interop-content" style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; font-size: 12px; line-height: 1.5; margin-bottom: 14px;"></div>
+      <button onclick="closeModal('generic-interop-modal')" class="btn-main" style="padding: 8px 14px; font-size: 11px;">Cerrar Consulta</button>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
   <!-- MODAL: VISOR DE RESOLUCIONES TIPO PDF      -->
   <!-- ========================================== -->
   <div id="pdf-modal" class="modal-overlay">
@@ -652,17 +694,17 @@
       <!-- Barra superior PDF -->
       <div class="pdf-viewer-bar">
         <span id="pdf-filename">Resolucion_01_2019.pdf</span>
-        <div style="display: flex; gap: 8px;">
-          <button onclick="alert('Descarga simulada del documento judicial')" style="background: #475569; border: none; color: white; padding: 3px 8px; border-radius: 4px; cursor: pointer;">💾 Descargar</button>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <button onclick="zoomPdf(-0.1)" style="background: #475569; border: none; color: white; padding: 2px 7px; border-radius: 4px; cursor: pointer;">-</button>
+          <button onclick="zoomPdf(0.1)" style="background: #475569; border: none; color: white; padding: 2px 7px; border-radius: 4px; cursor: pointer;">+</button>
+          <button onclick="simulatePdfDownload()" style="background: #475569; border: none; color: white; padding: 3px 8px; border-radius: 4px; cursor: pointer;">💾 Descargar</button>
           <button onclick="window.print()" style="background: #475569; border: none; color: white; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🖨️ Imprimir</button>
           <button onclick="closeModal('pdf-modal')" style="background: #ef4444; border: none; color: white; padding: 3px 8px; border-radius: 4px; cursor: pointer;">✕</button>
         </div>
       </div>
 
       <!-- Hoja PDF -->
-      <div class="pdf-body-paper" id="pdf-paper-content">
-        <!-- Contenido inyectado -->
-      </div>
+      <div class="pdf-body-paper" id="pdf-paper-content"></div>
     </div>
   </div>
 
@@ -718,7 +760,14 @@
       <button onclick="toggleChatbot()" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer;">✕</button>
     </div>
 
-    <div id="chatbot-messages" style="flex-grow: 1; padding: 12px; overflow-y: auto; font-size: 12px; display: flex; flex-direction: column; gap: 8px; background: #fdf2f8;">
+    <!-- Preguntas rápidas -->
+    <div style="display: flex; gap: 4px; padding: 6px 10px; background: #fdf2f8; border-bottom: 1px solid var(--mag-border); overflow-x: auto;">
+      <button onclick="quickAsk('¿Dónde está la demanda?')" style="background: white; border: 1px solid var(--mag-border); border-radius: 12px; padding: 2px 8px; font-size: 9px; cursor: pointer; white-space: nowrap; color: #831034;">📄 Demanda</button>
+      <button onclick="quickAsk('¿Quién es el juez?')" style="background: white; border: 1px solid var(--mag-border); border-radius: 12px; padding: 2px 8px; font-size: 9px; cursor: pointer; white-space: nowrap; color: #831034;">⚖️ Juez</button>
+      <button onclick="quickAsk('¿Qué resoluciones hay?')" style="background: white; border: 1px solid var(--mag-border); border-radius: 12px; padding: 2px 8px; font-size: 9px; cursor: pointer; white-space: nowrap; color: #831034;">🏛️ Resoluciones</button>
+    </div>
+
+    <div id="chatbot-messages" style="flex-grow: 1; padding: 12px; overflow-y: auto; font-size: 12px; display: flex; flex-direction: column; gap: 8px; background: #fffafc;">
       <div style="background: #ffffff; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--mag-border); max-width: 85%; align-self: flex-start;">
         ¡Hola! 👋 Soy <strong>Iurisniano</strong>, tu asistente legal del expediente. Puedes preguntarme sobre fojas, resoluciones, el juez del caso o dónde está la demanda. ¿En qué te ayudo hoy?
       </div>
@@ -730,9 +779,14 @@
     </div>
   </div>
 
-  <!-- SCRIPT LOGIC -->
+  <style>
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  </style>
+
+  <!-- LÓGICA JAVASCRIPT INTEGRAL -->
   <script>
-    // DATOS DE SEGUIMIENTO (12 ACTUADOS)
+    // BASE DE DATOS DEL EXPEDIENTE 00174-2019-0-2111-JR-LA-02
     var ACTS = [
       { n: 1, f: "Fjs. 1-2", d: "26/06/2019", t: "Cargo / Carátula", des: "Ingreso en Mesa de Partes Única de Juliaca.", pdfTitle: "Carátula de Ingreso CDG N° 00174-2019", pdfBody: "<p><strong>PODER JUDICIAL DEL PERÚ - CORTE DE PUNO</strong></p><p>Expediente: 00174-2019-0-2111-JR-LA-02</p><p>Materia: Desnaturalización de Contrato</p><p>Ingreso: 26/06/2019 11:31:38 - Fojas: 26</p>" },
       { n: 2, f: "Fjs. 2-26", d: "26/06/2019", t: "Escrito N° 01 (Demanda)", des: "Demanda laboral ordinaria de desnaturalización.", pdfTitle: "Escrito 01 - Demanda Laboral", pdfBody: "<p><strong>SEÑOR JUEZ DE TRABAJO DE SAN ROMÁN:</strong></p><p>Andrés Leonidas Supo Quispe solicita se declare la desnaturalización de la intermediación laboral prestada a EsSalud mediante SILSA y se ordene la inclusión en planillas a plazo indeterminado (D. Leg. 728).</p>" },
@@ -748,33 +802,38 @@
       { n: 12, f: "Fjs. 108-124+", d: "25/09/2019", t: "Contestación", des: "EsSalud contesta mediante apoderado.", pdfTitle: "Contestación de Demanda - EsSalud", pdfBody: "<p>EsSalud se apersona mediante Hernán López Alférez, señala casilla 59629 y solicita declarar infundada la demanda alegando falta de vacante en el CAP.</p>" }
     ];
 
-    // CONTROL DE PANTALLAS
+    // CONTROL CENTRALIZADO DE PANTALLAS
     function switchScreen(screenNum) {
       document.querySelectorAll('.screen-stage').forEach(el => el.classList.remove('active'));
       const target = document.getElementById('pantalla-' + screenNum);
       if (target) target.classList.add('active');
       window.scrollTo(0, 0);
 
-      if (screenNum === 1) runLoader('p1-loader-fill', 2);
-      if (screenNum === 4) runLoader('p4-loader-fill', 5);
+      if (screenNum === 1) runLoader('p1-loader-fill', 'p1-pct', 2);
+      if (screenNum === 4) runLoader('p4-loader-fill', 'p4-pct', 5);
       if (screenNum === 5) renderScreen5();
     }
 
-    function runLoader(barId, nextScreen) {
+    // CARGADORES DE PANTALLA FUNCIONALES (0% A 100%)
+    function runLoader(barId, pctId, nextScreen) {
       let p = 0;
-      const el = document.getElementById(barId);
-      el.style.width = '0%';
+      const bar = document.getElementById(barId);
+      const pct = document.getElementById(pctId);
+      bar.style.width = '0%';
+      pct.innerText = '0%';
+      
       const iv = setInterval(() => {
         p += 20;
-        el.style.width = p + '%';
+        bar.style.width = p + '%';
+        pct.innerText = p + '%';
         if (p >= 100) {
           clearInterval(iv);
           setTimeout(() => switchScreen(nextScreen), 150);
         }
-      }, 50);
+      }, 60);
     }
 
-    // WORKFLOW DE BÚSQUEDA
+    // WORKFLOW DE BÚSQUEDA Y CAPTCHA
     function triggerCaptchaWorkflow() {
       openModal('captcha-modal');
       generateCaptcha();
@@ -803,6 +862,29 @@
       document.getElementById('temis-blank-box').style.display = 'block';
     }
 
+    function toggleSearchTab(mode) {
+      const btnC = document.getElementById('tab-code-btn');
+      const btnP = document.getElementById('tab-party-btn');
+      const boxC = document.getElementById('search-by-code-fields');
+      const boxP = document.getElementById('search-by-party-fields');
+
+      if (mode === 'code') {
+        btnC.style.background = '#831034';
+        btnC.style.color = 'white';
+        btnP.style.background = '#e2e8f0';
+        btnP.style.color = '#334155';
+        boxC.style.display = 'block';
+        boxP.style.display = 'none';
+      } else {
+        btnP.style.background = '#831034';
+        btnP.style.color = 'white';
+        btnC.style.background = '#e2e8f0';
+        btnC.style.color = '#334155';
+        boxP.style.display = 'block';
+        boxC.style.display = 'none';
+      }
+    }
+
     // CAPTCHA
     let currentCaptcha = "";
     function generateCaptcha() {
@@ -815,11 +897,32 @@
       document.getElementById('captcha-err').style.display = 'none';
     }
 
-    // MODALES
+    // GESTIÓN DE MODALES
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    // INTEROPERABILIDAD RENIEC (CENSURADA)
+    // BOTONES DEL MENÚ HORIZONTAL TOTALMENTE FUNCIONALES DENTRO DE LA INTERFAZ
+    function showInfoMenu(topic) {
+      const title = document.getElementById('info-modal-title');
+      const body = document.getElementById('info-modal-body');
+
+      if (topic === 'mision') {
+        title.innerText = "Misión Institucional del Poder Judicial";
+        body.innerHTML = "<p>Administrar Justicia a través de sus órganos jurisdiccionales, con arreglo a la Constitución y a las leyes, garantizando la seguridad jurídica, la tutela jurisdiccional efectiva y el Estado de Derecho en todo el territorio de la República del Perú.</p>";
+      } else if (topic === 'vision') {
+        title.innerText = "Visión del Poder Judicial";
+        body.innerHTML = "<p>Ser un Poder del Estado moderno, autónomo, eficiente y transparente, reconocido por brindar una justicia célere, confiable e inclusiva con estándares de calidad y ética.</p>";
+      } else if (topic === 'transparencia') {
+        title.innerText = "Portal de Transparencia Estándar";
+        body.innerHTML = "<p>En cumplimiento de la Ley de Transparencia y Acceso a la Información Pública, la Corte Superior de Justicia de Puno pone a disposición ciudadana el acceso a contrataciones, presupuestos anuales, directorio judicial y resoluciones administrativas.</p>";
+      } else if (topic === 'contactanos') {
+        title.innerText = "Sedes y Canales de Atención";
+        body.innerHTML = "<p><strong>Sede Central Juliaca:</strong> Jr. Apurímac / Pumacahua, San Román, Puno.<br><strong>Módulo Laboral Zona Norte:</strong> Jr. Mariano Núñez N° 139, Juliaca.<br><strong>Mesa de Partes Electrónica:</strong> Disponible las 24 horas.<br><strong>Central Telefónica:</strong> (051) 507000.</p>";
+      }
+      openModal('info-modal-view');
+    }
+
+    // INTEROPERABILIDAD RENIEC (CON FOTO Y CENSURA)
     function openReniecModal(nom, dni) {
       document.getElementById('reniec-nom').innerText = nom.split(' ')[0] + " ********";
       document.getElementById('reniec-ape').innerText = (nom.split(' ')[1] || 'QUISPE') + " ********";
@@ -827,16 +930,24 @@
       openModal('reniec-modal');
     }
 
-    function openStandardInterop(tipo, nom, doc, desc) {
-      alert(`[INTEROPERABILIDAD - ${tipo}]\n\nSujeto: ${nom}\nDocumento: ${doc}\n\nResultado Oficial:\n${desc}`);
+    function openGenericInterop(org, nom, doc, desc) {
+      document.getElementById('gen-interop-title').innerText = "Interoperabilidad: " + org;
+      document.getElementById('gen-interop-name').innerText = nom;
+      document.getElementById('gen-interop-doc').innerText = doc;
+      document.getElementById('gen-interop-content').innerText = desc;
+      openModal('generic-interop-modal');
     }
 
-    // VISOR PDF
+    // VISOR DE PDF CON ZOOM Y DESCARGA
+    let currentPdfScale = 1;
     function openPdfDoc(num) {
       const act = ACTS.find(a => a.n === num);
       if (!act) return;
+      currentPdfScale = 1;
       document.getElementById('pdf-filename').innerText = `${act.t.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
-      document.getElementById('pdf-paper-content').innerHTML = `
+      const paper = document.getElementById('pdf-paper-content');
+      paper.style.transform = `scale(${currentPdfScale})`;
+      paper.innerHTML = `
         <div style="border-bottom: 2px solid #334155; padding-bottom: 8px; margin-bottom: 14px; display: flex; justify-content: space-between;">
           <strong>PODER JUDICIAL DEL PERÚ</strong>
           <span style="font-size: 11px;">${act.f}</span>
@@ -850,9 +961,22 @@
       openModal('pdf-modal');
     }
 
+    function zoomPdf(delta) {
+      currentPdfScale += delta;
+      if (currentPdfScale < 0.7) currentPdfScale = 0.7;
+      if (currentPdfScale > 1.4) currentPdfScale = 1.4;
+      document.getElementById('pdf-paper-content').style.transform = `scale(${currentPdfScale})`;
+    }
+
+    function simulatePdfDownload() {
+      const link = document.createElement('a');
+      link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent('Simulador CEJ - Expediente Judicial 00174-2019-0-2111-JR-LA-02');
+      link.download = document.getElementById('pdf-filename').innerText;
+      link.click();
+    }
+
     // RENDERIZADO PANTALLA 5
     function renderScreen5() {
-      // Línea de tiempo
       const tBox = document.getElementById('timeline-flow-list');
       tBox.innerHTML = '';
       [ACTS[0], ACTS[1], ACTS[3], ACTS[5], ACTS[8], ACTS[11]].forEach(item => {
@@ -872,7 +996,6 @@
         tBox.appendChild(div);
       });
 
-      // Tabla de actuados
       const tbody = document.getElementById('acts-table-body');
       tbody.innerHTML = '';
       ACTS.forEach(a => {
@@ -890,10 +1013,15 @@
       });
     }
 
-    // CHATBOT IURISNIANO
+    // CHATBOT IURISNIANO (CON DIÁLOGO INTELIGENTE)
     function toggleChatbot() {
       const w = document.getElementById('chatbot-window');
       w.style.display = w.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function quickAsk(text) {
+      document.getElementById('chatbot-input').value = text;
+      sendChatMsg();
     }
 
     function sendChatMsg() {
@@ -902,30 +1030,27 @@
       if (!txt) return;
 
       const c = document.getElementById('chatbot-messages');
-      
-      // Mensaje de usuario
       const uDiv = document.createElement('div');
       uDiv.style = "background:#831034; color:white; padding:8px 12px; border-radius:12px; max-width:85%; align-self:flex-end;";
       uDiv.innerText = txt;
       c.appendChild(uDiv);
       inp.value = "";
 
-      // Respuesta empática de Iurisniano
       const q = txt.toLowerCase();
-      let r = "¡Con gusto te oriento! 😊 Puedes encontrar esa información revisando la sección IV de Seguimiento o dime si buscas un actuado específico.";
+      let r = "¡Con gusto te oriento! 😊 Puedes revisar la sección IV de Seguimiento o preguntarme por alguna foja o resolución específica.";
 
-      if (q.includes("demanda") || q.includes("escrito 01") || q.includes("donde esta la demanda")) {
-        r = "¡Claro que sí! La demanda laboral se encuentra en el **Actuado N° 02, a Fojas 2 al 26**. Fue presentada el 26/06/2019. 📄";
-      } else if (q.includes("juez") || q.includes("quien es el juez")) {
-        r = "El juez a cargo del despacho es el magistrado **Gonzalo Víctor Huamán Romero**, del Juzgado de Trabajo Zona Norte de Juliaca. ⚖️";
+      if (q.includes("demanda") || q.includes("escrito 01")) {
+        r = "¡Claro! La demanda laboral se encuentra en el **Actuado N° 02, a Fojas 2 al 26**. Fue presentada el 26/06/2019 solicitando la desnaturalización con EsSalud. 📄";
+      } else if (q.includes("juez")) {
+        r = "El juez titular del despacho es el magistrado **Gonzalo Víctor Huamán Romero**, del Juzgado de Trabajo Zona Norte de Juliaca. ⚖️";
       } else if (q.includes("secretaria") || q.includes("especialista")) {
-        r = "La especialista legal responsable de la causa es la Dra. **Rosario Carlos Villán**. ✍️";
+        r = "La especialista legal a cargo de la causa es la Dra. **Rosario Carlos Villán**. ✍️";
       } else if (q.includes("resolucion 1") || q.includes("resolucion 01")) {
-        r = "La **Resolución N° 01** está en el Actuado N° 06 (Fojas 99), emitida el 13/08/2019, donde se concedió 3 días de plazo al demandante. Puedes abrir su PDF directamente.";
-      } else if (q.includes("resolucion 2") || q.includes("resolucion 02") || q.includes("admisorio")) {
-        r = "El auto admisorio definitivo es la **Resolución N° 02** (Actuado N° 09, Fojas 105), expedida el 28/08/2019 corriendo traslado a EsSalud. 🏛️";
-      } else if (q.includes("partes") || q.includes("demandante") || q.includes("demandado")) {
-        r = "La parte demandante es don **Andrés Leonidas Supo Quispe** y la demandada es **EsSalud Red Asistencial Juliaca**. Toda su interoperabilidad con RENIEC y PNP está en la Sección III. 🔍";
+        r = "La **Resolución N° 01** fue dictada el 13/08/2019 (Actuado N° 06, Fojas 99), requiriendo al demandante pronunciarse sobre SILSA en un plazo de 3 días.";
+      } else if (q.includes("resolucion 2") || q.includes("admisorio")) {
+        r = "El admisorio formal es la **Resolución N° 02** (Actuado N° 09, Fojas 105), emitida el 28/08/2019 corriendo traslado a EsSalud. 🏛️";
+      } else if (q.includes("partes") || q.includes("demandante")) {
+        r = "El demandante es **Andrés Leonidas Supo Quispe** y la entidad demandada es **EsSalud Red Juliaca**. Toda su interoperabilidad con RENIEC y PNP está disponible en la Sección III. 🔍";
       }
 
       setTimeout(() => {
@@ -934,39 +1059,30 @@
         bDiv.innerHTML = r;
         c.appendChild(bDiv);
         c.scrollTop = c.scrollHeight;
-      }, 400);
+      }, 350);
     }
 
-    // MULTI-IDIOMA (ES / EN)
-    var currentLang = 'es';
+    // SELECTOR DE IDIOMAS (ESPAÑOL / ENGLISH)
     var DICT = {
       es: {
-        sysTitle: "CEJ Electrónico - Puno",
-        home: "Inicio", mision: "Misión", vision: "Visión", transp: "Transparencia", contact: "Contáctanos", searchBtn: "🔍 Búsqueda de Expediente",
-        p0Title: "SISTEMA DE CONSULTA DE EXPEDIENTES (CEJ / EJE)",
-        p0Sub: "Simulación Jurisdiccional para Derecho e Informática",
-        btnEnter: "Ingresar al Sistema",
-        p1Title: "Iniciando Portal Institucional", p1Desc: "Cargando módulos de Gobierno Digital...",
-        p4Title: "Indexando Cuaderno Laboral Digital", p4Desc: "Recuperando resoluciones y línea de tiempo...",
+        sysTitle: "CEJ Electrónico - Puno", home: "Inicio", mision: "Misión", vision: "Visión", transp: "Transparencia", contact: "Contáctanos", searchBtn: "🔍 Búsqueda de Expediente",
+        p0Title: "SISTEMA DE CONSULTA DE EXPEDIENTES (CEJ / EJE)", p0Sub: "Simulación Jurisdiccional para Derecho e Informática", btnEnter: "Ingresar al Sistema",
+        p1Title: "Iniciando Portal Institucional", p1Desc: "Estableciendo canal cifrado con el SIJ...",
+        p4Title: "Indexando Cuaderno Laboral Digital", p4Desc: "Recuperando foliatura, resoluciones y línea de tiempo...",
         secI: "I. REPORTE DE EXPEDIENTE", secII: "II. ESTADO, PROGRESO Y LÍNEA DE TIEMPO", secIII: "III. PARTES PROCESALES (INTEROPERABILIDAD INSTITUCIONAL)", secIV: "IV. SEGUIMIENTO DEL EXPEDIENTE (NOTIFICACIONES Y RESOLUCIONES)"
       },
       en: {
-        sysTitle: "Electronic Court Records - Puno",
-        home: "Home", mision: "Mission", vision: "Vision", transp: "Transparency", contact: "Contact Us", searchBtn: "🔍 Case Search",
-        p0Title: "JUDICIAL CASE CONSULTATION SYSTEM (CEJ / EJE)",
-        p0Sub: "Academic Simulation for Digital Government and IT Law",
-        btnEnter: "Enter System",
-        p1Title: "Launching Institutional Portal", p1Desc: "Loading Digital Government modules...",
-        p4Title: "Indexing Digital Case File", p4Desc: "Fetching resolutions and timeline...",
+        sysTitle: "Electronic Court Records - Puno", home: "Home", mision: "Mission", vision: "Vision", transp: "Transparency", contact: "Contact Us", searchBtn: "🔍 Case Search",
+        p0Title: "JUDICIAL CASE CONSULTATION SYSTEM (CEJ / EJE)", p0Sub: "Academic Simulation for Digital Government and IT Law", btnEnter: "Enter System",
+        p1Title: "Launching Institutional Portal", p1Desc: "Establishing encrypted tunnel with SIJ...",
+        p4Title: "Indexing Digital Case File", p4Desc: "Fetching filings, orders, and case timeline...",
         secI: "I. CASE REPORT", secII: "II. STATUS, PROGRESS AND TIMELINE", secIII: "III. PROCEDURAL PARTIES (INTEROPERABILITY)", secIV: "IV. CASE TRACKING (NOTIFICATIONS AND RESOLUTIONS)"
       }
     };
 
     function setLanguage(lang) {
-      currentLang = lang;
       document.getElementById('btn-es').className = lang === 'es' ? 'btn-lang active' : 'btn-lang';
       document.getElementById('btn-en').className = lang === 'en' ? 'btn-lang active' : 'btn-lang';
-
       const d = DICT[lang];
       document.getElementById('ui-system-title').innerText = d.sysTitle;
       document.getElementById('nav-btn-home').innerText = d.home;
@@ -988,17 +1104,12 @@
       document.getElementById('sec-iv-title').innerText = d.secIV;
     }
 
-    // MENÚ INSTITUCIONAL
-    function showInfoMenu(topic) {
-      alert(`[INFORMACIÓN INSTITUCIONAL - ${topic.toUpperCase()}]\n\nPoder Judicial del Perú - Corte Superior de Justicia de Puno.\nComprometidos con la justicia célere, digital y transparente.`);
-    }
-
-    // TEMPORIZADOR DE 7 MINUTOS
+    // TEMPORIZADOR DE 7 MINUTOS (420 SEGUNDOS)
     var secondsRemaining = 420;
     setInterval(() => {
       secondsRemaining--;
       if (secondsRemaining <= 0) {
-        alert("Su sesión de 7 minutos ha finalizado por seguridad. Redirigiendo a pantalla de inicio.");
+        alert("Su sesión de 7 minutos ha finalizado por seguridad judicial. Redirigiendo al inicio.");
         location.reload();
       }
       const m = Math.floor(secondsRemaining / 60);
